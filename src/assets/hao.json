@@ -1,0 +1,32 @@
+{
+  "glyphs": {
+    "皓": {
+      "ha": 1389,
+      "x_min": 170,
+      "x_max": 1299,
+      "o": "m 1299 439 l 1251 401 l 1125 433 q 1063 441 1096 441 l 1046 441 q 620 390 1016 439 l 600 389 q 576 386 583 388 l 579 185 l 519 146 l 484 184 l 414 206 l 489 238 l 483 658 l 302 635 l 304 496 l 370 503 l 368 530 l 472 491 l 447 463 l 304 444 l 307 236 l 397 218 l 218 147 l 205 185 l 170 203 l 213 225 l 201 642 q 179 698 197 659 l 243 688 l 330 825 l 321 859 l 444 801 l 416 770 l 292 692 l 518 720 l 539 728 l 596 671 l 571 635 l 574 458 l 838 488 l 838 636 l 807 632 l 762 627 q 731 618 749 626 q 703 598 714 611 l 687 632 l 642 569 l 577 526 l 593 579 l 671 798 l 637 827 l 759 822 l 794 783 l 724 685 l 838 697 l 838 859 l 760 892 l 848 930 l 900 913 q 964 876 906 913 l 924 763 l 924 705 l 981 711 l 1017 751 l 1129 698 l 1072 638 l 1075 654 l 1075 655 q 1072 663 1075 659 q 1064 665 1069 666 l 924 647 l 924 498 l 1109 519 l 1149 551 l 1299 439 m 1047 370 l 1122 315 l 1101 268 l 1080 0 l 1020 -35 l 981 5 l 886 15 l 980 50 l 994 289 l 747 248 l 759 58 l 890 53 l 677 -45 l 661 -4 l 622 15 l 667 42 l 647 279 q 614 330 643 289 l 719 308 l 1024 353 l 1047 370 z "
+    }
+  },
+  "familyName": "Zcool-LengShuiXiaoQingKeTi Zcool-LengShuiXiaoQingKeTi",
+  "ascender": 1227,
+  "descender": -277,
+  "underlinePosition": -208,
+  "underlineThickness": 69,
+  "boundingBox": { "yMin": -277, "xMin": -7, "yMax": 1226, "xMax": 1436 },
+  "resolution": 1000,
+  "original_font_information": {
+    "format": 0,
+    "copyright": "(C) Zcool-LengShuiXiaoQingKeTi 2018",
+    "fontFamily": "Zcool-LengShuiXiaoQingKeTi Zcool-LengShuiXiaoQingKeTi",
+    "fontSubfamily": "Regular",
+    "uniqueID": "1.000;Zhon;Zcool-LengShuiXiaoQingKeTi-Zcool-LengShuiXiaoQingKeTi",
+    "fullName": "????????",
+    "version": "Version 1.000",
+    "postScriptName": "Zcool-LengShuiXiaoQingKeTi-Zcool-LengShuiXiaoQingKeTi",
+    "trademark": "Trademark of ZHONGQI  Electronic Co., ShangHai",
+    "preferredFamily": "Zcool-LengShuiXiaoQingKeTi",
+    "preferredSubfamily": "Zcool-LengShuiXiaoQingKeTi"
+  },
+  "cssFontWeight": "normal",
+  "cssFontStyle": "normal"
+}
