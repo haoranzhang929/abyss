@@ -20,7 +20,9 @@ import {
 
 let frameId: number | null;
 
-const scene = setupScene(0x020202);
+const NIGHT_OWL_BLUE = "#000c1d";
+
+const scene = setupScene(NIGHT_OWL_BLUE);
 
 const lights = setupLights();
 scene.add(...lights);
