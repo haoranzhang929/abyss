@@ -8,7 +8,7 @@ import * as serviceWorker from "./serviceWorker";
 import routes from "./routes";
 
 ReactDOM.render(
-  <BrowserRouter>
+  <BrowserRouter basename={process.env.PUBLIC_URL}>
     <Switch>
       {routes.map(({ path, exact, component }) => (
         <Route key={path} path={path} exact={exact} component={component} />
