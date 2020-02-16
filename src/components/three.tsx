@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, memo } from "react";
-import { Object3D, AxesHelper } from "three";
+import { Object3D, Geometry } from "three";
 import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
 import { isMobile } from "react-device-detect";
 
@@ -18,7 +18,9 @@ import {
   setupCircle,
   loadText,
   createFontMesh,
-  createFontLine
+  createFontLine,
+  setupStars,
+  ExtendedVector3
 } from "../threejs";
 
 let frameId: number | null;
@@ -38,6 +40,9 @@ areaImage.src = SMAAEffect.areaImageDataURL;
 const searchImage = new Image();
 searchImage.src = SMAAEffect.searchImageDataURL;
 const smaaEffect = new SMAAEffect(searchImage, areaImage, 1);
+
+const stars = setupStars();
+scene.add(stars);
 
 const ThreeScene = () => {
   const divRef = useRef<HTMLDivElement>(null);
@@ -69,21 +74,46 @@ const ThreeScene = () => {
   textObj.position.set(-150, -90, 0);
   scene.add(textObj);
 
-  let mobileControls: null | DeviceOrientationControls;
+  let controls: null | DeviceOrientationControls;
 
   if (isMobile) {
-    mobileControls = new DeviceOrientationControls(camera);
-    mobileControls.deviceOrientation = 0;
+    controls = new DeviceOrientationControls(camera);
+    controls.deviceOrientation = 0;
   }
+
+  const { renderer } = composer;
+
+  const orbitControls = new OrbitControls(camera, renderer.domElement);
+  orbitControls.enablePan = false;
+  orbitControls.maxDistance = 1500;
+  orbitControls.minDistance = 200;
+  orbitControls.rotateSpeed = 0.4;
+  orbitControls.zoomSpeed = 0.4;
 
   const renderScene = () => {
     composer.render(scene, camera);
   };
 
+  const starsMove = () => {
+    const starGeo = stars.geometry as Geometry;
+    starGeo.vertices.forEach((star: unknown) => {
+      const eStar = star as ExtendedVector3;
+      eStar.velocity += 0.05 + Math.random() * 0.01;
+      eStar.z += eStar.velocity;
+      if (eStar.z > 1500) {
+        eStar.z = -1500;
+        eStar.velocity = 0;
+      }
+    });
+    starGeo.verticesNeedUpdate = true;
+    stars.rotation.z -= 0.0005;
+  };
+
   const animate = () => {
-    isMobile && mobileControls && mobileControls.update();
+    isMobile && controls && controls.update();
     frameId = window.requestAnimationFrame(animate);
     renderScene();
+    starsMove();
   };
 
   const start = () => {
@@ -103,11 +133,6 @@ const ThreeScene = () => {
 
     composer.setSize(width, height);
   };
-
-  const { renderer } = composer;
-
-  scene.add(new AxesHelper(5000));
-  new OrbitControls(camera, renderer.domElement);
 
   useEffect(() => {
     onWindowResize(width, height);
@@ -129,12 +154,12 @@ const ThreeScene = () => {
   useEffect(
     () => {
       if (isMobile) {
-        mobileControls?.connect();
+        controls?.connect();
         start();
       }
       return () => {
-        mobileControls?.disconnect();
-        mobileControls?.dispose();
+        controls?.disconnect();
+        controls?.dispose();
         stop();
       };
     },
