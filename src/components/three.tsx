@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, memo } from "react";
+import React, { useRef, useEffect, useState, memo } from "react";
 import { Object3D, Geometry } from "three";
 import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
 import { isMobile } from "react-device-detect";
@@ -23,9 +23,11 @@ import {
   ExtendedVector3
 } from "../threejs";
 
-let frameId: number | null;
+import { colorPalette } from "../threejs/config";
 
-const NIGHT_OWL_BLUE = "#000c1d";
+const { NIGHT_OWL_BLUE } = colorPalette;
+
+let frameId: number | null;
 
 const scene = setupScene(NIGHT_OWL_BLUE);
 
@@ -45,6 +47,8 @@ const stars = setupStars();
 scene.add(stars);
 
 const ThreeScene = () => {
+  const [isClicked, setIsClicked] = useState(false);
+
   const divRef = useRef<HTMLDivElement>(null);
   const { width, height } = useWindowSize();
 
@@ -52,9 +56,9 @@ const ThreeScene = () => {
 
   const godRaysEffect = new GodRaysEffect(camera, circle, {
     resolutionScale: 1,
-    density: 0.8,
+    density: 0.9,
     decay: 0.95,
-    weight: 0.6,
+    weight: 0.4,
     samples: 100
   });
 
@@ -88,7 +92,7 @@ const ThreeScene = () => {
   orbitControls.maxDistance = 1500;
   orbitControls.minDistance = 200;
   orbitControls.rotateSpeed = 0.4;
-  orbitControls.zoomSpeed = 0.4;
+  orbitControls.zoomSpeed = 0.6;
 
   const renderScene = () => {
     composer.render(scene, camera);
@@ -167,7 +171,24 @@ const ThreeScene = () => {
     [isMobile]
   );
 
-  return <div ref={divRef} className="three-container"></div>;
+  return (
+    <>
+      {!isClicked ? (
+        <div className="overlay">
+          <div className="overlay--container">
+            <q className="quote">
+              If you gaze long enough into an abyss, the abyss will gaze back into you.
+            </q>
+            <small className="author"> -- Friedrich Nietzsche</small>
+            <button className="start-button" onClick={() => setIsClicked(true)}>
+              Start
+            </button>
+          </div>
+        </div>
+      ) : null}
+      <div ref={divRef} className="three-container"></div>
+    </>
+  );
 };
 
 export default memo(ThreeScene);

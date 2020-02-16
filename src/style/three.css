@@ -10,3 +10,54 @@ body {
   height: 100%;
   display: block;
 }
+
+.overlay {
+  position: absolute;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 1;
+  background-color: #000c1d;
+  color: #ffffff;
+}
+
+.overlay--container {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+}
+
+.start-button {
+  height: 30px;
+  width: 100px;
+  background: transparent;
+  color: #ffffff;
+  border: 2px outset #ffffff;
+  border-radius: 10px;
+  cursor: pointer;
+  font-family: "Roboto Mono", monospace;
+  font-size: 0.8rem;
+  align-self: center;
+  margin-top: 10px;
+}
+
+.quote,
+.author {
+  align-self: center;
+  color: #b4b4b4;
+  font-family: "Roboto Mono", monospace;
+}
+
+.quote {
+  font-size: 1rem;
+}
+
+.author {
+  margin: 20px;
+  width: 100%;
+}
