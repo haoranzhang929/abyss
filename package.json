@@ -2,6 +2,8 @@
   "name": "whoishao",
   "version": "0.1.0",
   "private": true,
+  "author": "Haoran Zhang",
+  "homepage": "https://github.com/haoranzhang929/whoishao-ts-react",
   "dependencies": {
     "postprocessing": "^6.10.0",
     "react": "^16.12.0",
@@ -26,6 +28,7 @@
     "eslint-config-prettier": "^6.10.0",
     "eslint-plugin-prettier": "^3.1.2",
     "eslint-plugin-react": "^7.18.0",
+    "gh-pages": "^2.2.0",
     "prettier": "^1.19.1",
     "typescript": "^3.7.5"
   },
@@ -36,7 +39,8 @@
     "typecheck": "echo 'Type Checking...' && tsc --noEmit && echo 'Type Checking Completed'",
     "eject": "react-scripts eject",
     "lint": "echo 'Lint Checking...' && eslint --ext .js,.jsx,.ts,.tsx src && echo 'Lint Checking Completed'",
-    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix"
+    "lint:fix": "eslint --ext .js,.jsx,.ts,.tsx src --fix",
+    "deploy:gh-pages": "npm run build && gh-pages -d build"
   },
   "eslintConfig": {
     "extends": "react-app"
