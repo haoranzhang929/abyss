@@ -1,5 +1,5 @@
 import React, { useRef, useEffect, useState, memo } from "react";
-import { Object3D, Geometry } from "three";
+import { Object3D, Geometry, WebGLRenderer } from "three";
 import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
 import { isMobile } from "react-device-detect";
 
@@ -85,7 +85,7 @@ const ThreeScene = () => {
     controls.deviceOrientation = 0;
   }
 
-  const { renderer } = composer;
+  const renderer = composer.renderer as WebGLRenderer;
 
   const orbitControls = new OrbitControls(camera, renderer.domElement);
   orbitControls.enablePan = false;
@@ -116,8 +116,8 @@ const ThreeScene = () => {
   const animate = () => {
     isMobile && controls && controls.update();
     frameId = window.requestAnimationFrame(animate);
-    renderScene();
     starsMove();
+    renderScene();
   };
 
   const start = () => {
