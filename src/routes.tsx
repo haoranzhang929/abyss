@@ -1,3 +1,5 @@
+import { MemoExoticComponent } from "react";
+
 import App from "./App";
 import Root from "./components";
 import Three from "./components/three";
@@ -5,7 +7,7 @@ import Three from "./components/three";
 export interface Route {
   path: string;
   exact: boolean;
-  component: () => JSX.Element;
+  component: (() => JSX.Element) | MemoExoticComponent<() => JSX.Element>;
 }
 
 const routes: Route[] = [
