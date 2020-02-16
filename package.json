@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "author": "Haoran Zhang",
-  "homepage": "https://github.com/haoranzhang929/whoishao-ts-react",
+  "homepage": "https://haoranzhang929.github.io/whoishao-ts-react/",
   "dependencies": {
     "postprocessing": "^6.10.0",
     "react": "^16.12.0",
@@ -34,7 +34,7 @@
   },
   "scripts": {
     "start": "npm run lint && npm run typecheck && react-scripts start",
-    "build": "react-scripts build",
+    "build": "react-scripts build && cp build/index.html build/404.html",
     "test": "react-scripts test",
     "typecheck": "echo 'Type Checking...' && tsc --noEmit && echo 'Type Checking Completed'",
     "eject": "react-scripts eject",

@@ -12,8 +12,8 @@ export interface Route {
 
 const routes: Route[] = [
   { path: "/react-start", exact: true, component: App },
-  { path: "/", exact: true, component: Root },
-  { path: "/logo", exact: true, component: Three }
+  { path: "/", exact: true, component: Three },
+  { path: "/logo", exact: true, component: Root }
 ];
 
 export default routes;
