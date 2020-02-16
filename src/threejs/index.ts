@@ -108,17 +108,17 @@ export const setupStars = (starCount = 1000) => {
   const starTexture = new TextureLoader().load(star);
   const starGeo = new Geometry();
   for (let i = 0; i < starCount; i++) {
-    const rainDrop = new Vector3(
+    const star = new Vector3(
       Math.random() * 3000 - 1500,
       Math.random() * 3000 - 1500,
       Math.random() * 3000 - 1500
     );
-    const extendedStar = { ...rainDrop, velocity: 0 } as unknown;
+    const extendedStar = { ...star, velocity: 0 } as unknown;
     starGeo.vertices.push(extendedStar as Vector3);
   }
   const starMaterial = new PointsMaterial({
     color: LIGHT_CREAM,
-    size: 3,
+    size: 5,
     transparent: true,
     map: starTexture
   });
