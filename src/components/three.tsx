@@ -1,7 +1,10 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, memo } from "react";
 import { Object3D, AxesHelper } from "three";
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
+import { isMobile } from "react-device-detect";
+
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
+import { DeviceOrientationControls } from "three/examples/jsm/controls/DeviceOrientationControls.js";
 
 import useWindowSize from "../hooks/useWindowSize";
 
@@ -40,7 +43,6 @@ const ThreeScene = () => {
   const divRef = useRef<HTMLDivElement>(null);
   const { width, height } = useWindowSize();
 
-  const renderer = setupRenderer(width, height);
   const camera = setupCamera(width, height);
 
   const godRaysEffect = new GodRaysEffect(camera, circle, {
@@ -54,7 +56,7 @@ const ThreeScene = () => {
   const renderPass = new RenderPass(scene, camera);
   const effectPass = new EffectPass(camera, smaaEffect, godRaysEffect);
   effectPass.renderToScreen = true;
-  const composer = new EffectComposer(renderer);
+  const composer = new EffectComposer(setupRenderer(width, height));
   composer.addPass(renderPass);
   composer.addPass(effectPass);
 
@@ -67,13 +69,21 @@ const ThreeScene = () => {
   textObj.position.set(-150, -90, 0);
   scene.add(textObj);
 
+  let mobileControls: null | DeviceOrientationControls;
+
+  if (isMobile) {
+    mobileControls = new DeviceOrientationControls(camera);
+    mobileControls.deviceOrientation = 0;
+  }
+
   const renderScene = () => {
     composer.render(scene, camera);
   };
 
   const animate = () => {
-    renderScene();
+    isMobile && mobileControls && mobileControls.update();
     frameId = window.requestAnimationFrame(animate);
+    renderScene();
   };
 
   const start = () => {
@@ -94,13 +104,17 @@ const ThreeScene = () => {
     composer.setSize(width, height);
   };
 
-  new OrbitControls(camera, renderer.domElement);
-  scene.add(new AxesHelper(5000));
+  const { renderer } = composer;
 
-  start();
+  scene.add(new AxesHelper(5000));
+  new OrbitControls(camera, renderer.domElement);
 
   useEffect(() => {
     onWindowResize(width, height);
+
+    if (!isMobile) {
+      start();
+    }
 
     const divEl = divRef.current;
     divEl?.appendChild(renderer.domElement);
@@ -112,7 +126,23 @@ const ThreeScene = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [width, height]);
 
+  useEffect(
+    () => {
+      if (isMobile) {
+        mobileControls?.connect();
+        start();
+      }
+      return () => {
+        mobileControls?.disconnect();
+        mobileControls?.dispose();
+        stop();
+      };
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [isMobile]
+  );
+
   return <div ref={divRef} className="three-container"></div>;
 };
 
-export default ThreeScene;
+export default memo(ThreeScene);
