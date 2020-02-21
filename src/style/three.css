@@ -47,17 +47,25 @@ body {
 }
 
 .quote,
-.author {
+.author,
+.hint {
   align-self: center;
   color: #b4b4b4;
   font-family: "Roboto Mono", monospace;
 }
 
 .quote {
+  font-style: italic;
   font-size: 1rem;
 }
 
 .author {
-  margin: 20px;
+  font-style: italic;
+  margin: 20px 0 30px;
   width: 100%;
+}
+
+.hint {
+  font-weight: 300;
+  margin: 40px 20px 0;
 }

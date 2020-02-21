@@ -183,6 +183,10 @@ const ThreeScene = () => {
             <button className="start-button" onClick={() => setIsClicked(true)}>
               Start
             </button>
+            <small className="hint">
+              {isMobile ? "Touch/Pinch or move your device around " : "Darg/Zoom your mouse "}
+              to explore
+            </small>
           </div>
         </div>
       ) : null}
