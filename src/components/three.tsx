@@ -37,6 +37,7 @@ const { NIGHT_OWL_BLUE } = colorPalette;
 
 let frameId: number | null;
 
+// Three Scene init setup start
 const scene = setupScene(NIGHT_OWL_BLUE);
 
 const lights = setupLights();
@@ -68,6 +69,53 @@ const listener = new AudioListener();
 const sound = new Audio(listener);
 const analyser = new AudioAnalyser(sound, 64);
 
+const camera = setupCamera(window.innerWidth, window.innerHeight);
+camera.add(listener);
+
+const godRaysEffect = new GodRaysEffect(camera, circle, {
+  resolutionScale: 1,
+  density: 0.9,
+  decay: 0.95,
+  weight: 0.4,
+  samples: 100
+});
+
+const renderPass = new RenderPass(scene, camera);
+const effectPass = new EffectPass(camera, smaaEffect, godRaysEffect);
+effectPass.renderToScreen = true;
+const composer = new EffectComposer(setupRenderer(window.innerWidth, window.innerHeight));
+composer.addPass(renderPass);
+composer.addPass(effectPass);
+
+const renderer = composer.renderer as WebGLRenderer;
+
+const orbitControls = new OrbitControls(camera, renderer.domElement);
+orbitControls.enablePan = false;
+orbitControls.maxDistance = 1500;
+orbitControls.minDistance = 200;
+orbitControls.rotateSpeed = 0.4;
+orbitControls.zoomSpeed = 0.6;
+
+const renderScene = () => {
+  composer.render(scene, camera);
+};
+
+const starsMove = () => {
+  const starGeo = stars.geometry as Geometry;
+  starGeo.vertices.forEach((star: unknown) => {
+    const eStar = star as ExtendedVector3;
+    eStar.velocity += 0.05 + Math.random() * 0.01;
+    eStar.z += eStar.velocity;
+    if (eStar.z > 1500) {
+      eStar.z = -1500;
+      eStar.velocity = 0;
+    }
+  });
+  starGeo.verticesNeedUpdate = true;
+  stars.rotation.z -= 0.0005;
+};
+// Three Scene init setup end
+
 const ThreeScene = () => {
   const [isClicked, setIsClicked] = useState(false);
   const [isMesh] = useState(true);
@@ -79,24 +127,6 @@ const ThreeScene = () => {
   const divRef = useRef<HTMLDivElement>(null);
   const { width, height } = useWindowSize();
 
-  const camera = setupCamera(width, height);
-  camera.add(listener);
-
-  const godRaysEffect = new GodRaysEffect(camera, circle, {
-    resolutionScale: 1,
-    density: 0.9,
-    decay: 0.95,
-    weight: 0.4,
-    samples: 100
-  });
-
-  const renderPass = new RenderPass(scene, camera);
-  const effectPass = new EffectPass(camera, smaaEffect, godRaysEffect);
-  effectPass.renderToScreen = true;
-  const composer = new EffectComposer(setupRenderer(width, height));
-  composer.addPass(renderPass);
-  composer.addPass(effectPass);
-
   let controls: null | DeviceOrientationControls;
 
   if (isMobile) {
@@ -104,32 +134,11 @@ const ThreeScene = () => {
     controls.deviceOrientation = 0;
   }
 
-  const renderer = composer.renderer as WebGLRenderer;
+  const onWindowResize = (width: number, height: number) => {
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
 
-  const orbitControls = new OrbitControls(camera, renderer.domElement);
-  orbitControls.enablePan = false;
-  orbitControls.maxDistance = 1500;
-  orbitControls.minDistance = 200;
-  orbitControls.rotateSpeed = 0.4;
-  orbitControls.zoomSpeed = 0.6;
-
-  const renderScene = () => {
-    composer.render(scene, camera);
-  };
-
-  const starsMove = () => {
-    const starGeo = stars.geometry as Geometry;
-    starGeo.vertices.forEach((star: unknown) => {
-      const eStar = star as ExtendedVector3;
-      eStar.velocity += 0.05 + Math.random() * 0.01;
-      eStar.z += eStar.velocity;
-      if (eStar.z > 1500) {
-        eStar.z = -1500;
-        eStar.velocity = 0;
-      }
-    });
-    starGeo.verticesNeedUpdate = true;
-    stars.rotation.z -= 0.0005;
+    composer.setSize(width, height);
   };
 
   const animate = () => {
@@ -151,13 +160,6 @@ const ThreeScene = () => {
   const stop = () => {
     frameId && cancelAnimationFrame(frameId);
     frameId = null;
-  };
-
-  const onWindowResize = (width: number, height: number) => {
-    camera.aspect = width / height;
-    camera.updateProjectionMatrix();
-
-    composer.setSize(width, height);
   };
 
   useEffect(() => {
