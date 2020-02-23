@@ -259,17 +259,23 @@ const ThreeScene = () => {
                 <div></div>
               </div>
             )}
-            <div className="orientation-control">
-              <small className="label">Device Orientation</small>
-              <input
-                className="checkbox"
-                type="checkbox"
-                checked={isOrientControl}
-                onChange={() => setChecked(!isOrientControl)}
-              />
-            </div>
+            {isMobile && (
+              <div className="orientation-control">
+                <small className="label">Device Orientation</small>
+                <input
+                  className="checkbox"
+                  type="checkbox"
+                  checked={isOrientControl}
+                  onChange={() => setChecked(!isOrientControl)}
+                />
+              </div>
+            )}
             <small className="hint">
-              {isMobile ? "Touch/Pinch or move your device around " : "Darg/Zoom your mouse "}
+              {isMobile
+                ? isOrientControl
+                  ? "Move your device around (or Touch/Pinch) "
+                  : "Touch/Pinch your screen "
+                : "Darg/Zoom your mouse "}
               to explore
             </small>
           </div>
