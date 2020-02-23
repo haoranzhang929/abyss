@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useState, memo } from "react";
+import React, { useRef, useEffect, useState, useCallback, memo } from "react";
 import {
   Object3D,
   Geometry,
@@ -10,6 +10,9 @@ import {
 } from "three";
 import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
 import { isMobile } from "react-device-detect";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faVolumeUp, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
+import debounce from "lodash.debounce";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
 import { DeviceOrientationControls } from "three/examples/jsm/controls/DeviceOrientationControls.js";
@@ -31,7 +34,7 @@ import {
   ExtendedVector3
 } from "../threejs";
 
-import { colorPalette } from "../threejs/config";
+import { colorPalette, fftSize } from "../threejs/config";
 
 const { NIGHT_OWL_BLUE } = colorPalette;
 
@@ -67,7 +70,7 @@ scene.add(textObj);
 const audioLoader = new AudioLoader();
 const listener = new AudioListener();
 const sound = new Audio(listener);
-const analyser = new AudioAnalyser(sound, 64);
+const analyser = new AudioAnalyser(sound, fftSize);
 
 const camera = setupCamera(window.innerWidth, window.innerHeight);
 camera.add(listener);
@@ -118,8 +121,12 @@ const starsMove = () => {
 
 const ThreeScene = () => {
   const [isClicked, setIsClicked] = useState(false);
-  const [isMesh] = useState(true);
+  const [isMesh, setFontForm] = useState(true);
   const [isAudioLoaded, setAudioLoadingStatus] = useState(false);
+  const [isMuted, setMuteStatus] = useState(false);
+  const [isOrientControl, setChecked] = useState(false);
+
+  const debounceSetFontForm = useCallback(debounce(setFontForm, 30), []);
 
   textMesh.visible = isMesh;
   textLine.visible = !isMesh;
@@ -145,7 +152,13 @@ const ThreeScene = () => {
     isMobile && controls && controls.update();
     frameId = window.requestAnimationFrame(animate);
 
-    analyser.getFrequencyData();
+    const audioData = analyser.getFrequencyData();
+
+    if (audioData[0] >= 230) {
+      debounceSetFontForm(!isMesh);
+    } else {
+      debounceSetFontForm(isMesh);
+    }
 
     starsMove();
     renderScene();
@@ -171,6 +184,7 @@ const ThreeScene = () => {
           sound.setBuffer(buffer);
           sound.setLoop(true);
           setAudioLoadingStatus(true);
+          sound.setVolume(isMuted ? 0 : 0.5);
           sound.play();
         },
         xhr => {
@@ -205,6 +219,7 @@ const ThreeScene = () => {
     () => {
       if (isMobile) {
         controls?.connect();
+        if (controls) controls.enabled = isOrientControl;
         start();
       }
       return () => {
@@ -214,7 +229,7 @@ const ThreeScene = () => {
       };
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps
-    [isMobile]
+    [isMobile, isOrientControl]
   );
 
   return (
@@ -226,13 +241,14 @@ const ThreeScene = () => {
               If you gaze long enough into an abyss, the abyss will gaze back into you.
             </q>
             <small className="author"> -- Friedrich Nietzsche</small>
+            <FontAwesomeIcon
+              icon={isMuted ? faVolumeMute : faVolumeUp}
+              className="volume-control"
+              size="2x"
+              onClick={() => setMuteStatus(!isMuted)}
+            />
             {!isClicked && (
-              <button
-                className="start-button"
-                onClick={() => {
-                  setIsClicked(true);
-                }}
-              >
+              <button className="start-button" onClick={() => setIsClicked(true)}>
                 Start
               </button>
             )}
@@ -243,6 +259,15 @@ const ThreeScene = () => {
                 <div></div>
               </div>
             )}
+            <div className="orientation-control">
+              <small className="label">Device Orientation</small>
+              <input
+                className="checkbox"
+                type="checkbox"
+                checked={isOrientControl}
+                onChange={() => setChecked(!isOrientControl)}
+              />
+            </div>
             <small className="hint">
               {isMobile ? "Touch/Pinch or move your device around " : "Darg/Zoom your mouse "}
               to explore

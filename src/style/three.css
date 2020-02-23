@@ -48,7 +48,8 @@ body {
 
 .quote,
 .author,
-.hint {
+.hint,
+.orientation-control {
   align-self: center;
   color: #b4b4b4;
   font-family: "Roboto Mono", monospace;
@@ -67,7 +68,23 @@ body {
 
 .hint {
   font-weight: 300;
-  margin: 40px 20px 0;
+  margin: 20px 20px 0;
+}
+
+.volume-control {
+  align-self: center;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.orientation-control {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
+.label {
+  margin-right: 5px;
 }
 
 /* Loading CSS */
