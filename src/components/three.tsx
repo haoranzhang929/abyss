@@ -1,5 +1,13 @@
 import React, { useRef, useEffect, useState, memo } from "react";
-import { Object3D, Geometry, WebGLRenderer } from "three";
+import {
+  Object3D,
+  Geometry,
+  WebGLRenderer,
+  AudioListener,
+  AudioLoader,
+  AudioAnalyser,
+  Audio
+} from "three";
 import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
 import { isMobile } from "react-device-detect";
 
@@ -46,13 +54,33 @@ const smaaEffect = new SMAAEffect(searchImage, areaImage, 1);
 const stars = setupStars();
 scene.add(stars);
 
+const textGeometry = loadText();
+const textMesh = createFontMesh(textGeometry);
+
+const textLine = createFontLine(textGeometry);
+
+const textObj = new Object3D().add(textMesh, textLine);
+textObj.position.set(-150, -90, 0);
+scene.add(textObj);
+
+const audioLoader = new AudioLoader();
+const listener = new AudioListener();
+const sound = new Audio(listener);
+const analyser = new AudioAnalyser(sound, 64);
+
 const ThreeScene = () => {
   const [isClicked, setIsClicked] = useState(false);
+  const [isMesh] = useState(true);
+  const [isAudioLoaded, setAudioLoadingStatus] = useState(false);
+
+  textMesh.visible = isMesh;
+  textLine.visible = !isMesh;
 
   const divRef = useRef<HTMLDivElement>(null);
   const { width, height } = useWindowSize();
 
   const camera = setupCamera(width, height);
+  camera.add(listener);
 
   const godRaysEffect = new GodRaysEffect(camera, circle, {
     resolutionScale: 1,
@@ -68,15 +96,6 @@ const ThreeScene = () => {
   const composer = new EffectComposer(setupRenderer(width, height));
   composer.addPass(renderPass);
   composer.addPass(effectPass);
-
-  const textGeometry = loadText();
-  const textMesh = createFontMesh(textGeometry);
-  textMesh.visible = true;
-  const textLine = createFontLine(textGeometry);
-  textLine.visible = false;
-  const textObj = new Object3D().add(textMesh, textLine);
-  textObj.position.set(-150, -90, 0);
-  scene.add(textObj);
 
   let controls: null | DeviceOrientationControls;
 
@@ -116,6 +135,9 @@ const ThreeScene = () => {
   const animate = () => {
     isMobile && controls && controls.update();
     frameId = window.requestAnimationFrame(animate);
+
+    analyser.getFrequencyData();
+
     starsMove();
     renderScene();
   };
@@ -137,6 +159,28 @@ const ThreeScene = () => {
 
     composer.setSize(width, height);
   };
+
+  useEffect(() => {
+    isClicked &&
+      !isAudioLoaded &&
+      audioLoader.load(
+        `${process.env.PUBLIC_URL}/BlueBoi.mp3`,
+        buffer => {
+          sound.setBuffer(buffer);
+          sound.setLoop(true);
+          setAudioLoadingStatus(true);
+          sound.play();
+        },
+        xhr => {
+          const loadingStatus = (xhr.loaded / xhr.total) * 100;
+          console.info(`Audio Loading: ${Math.floor(loadingStatus)}%`);
+          if (loadingStatus === 100) {
+            console.log("Loading Complete");
+          }
+        }
+      );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [isClicked]);
 
   useEffect(() => {
     onWindowResize(width, height);
@@ -173,16 +217,30 @@ const ThreeScene = () => {
 
   return (
     <>
-      {!isClicked ? (
+      {!isAudioLoaded ? (
         <div className="overlay">
           <div className="overlay--container">
             <q className="quote">
               If you gaze long enough into an abyss, the abyss will gaze back into you.
             </q>
             <small className="author"> -- Friedrich Nietzsche</small>
-            <button className="start-button" onClick={() => setIsClicked(true)}>
-              Start
-            </button>
+            {!isClicked && (
+              <button
+                className="start-button"
+                onClick={() => {
+                  setIsClicked(true);
+                }}
+              >
+                Start
+              </button>
+            )}
+            {isClicked && (
+              <div className="lds-facebook">
+                <div></div>
+                <div></div>
+                <div></div>
+              </div>
+            )}
             <small className="hint">
               {isMobile ? "Touch/Pinch or move your device around " : "Darg/Zoom your mouse "}
               to explore
