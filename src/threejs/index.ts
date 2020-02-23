@@ -86,7 +86,8 @@ export const loadText = () => {
   const geometry = new TextBufferGeometry("皓", {
     font,
     size: 200,
-    height: 20
+    height: 20,
+    curveSegments: 1
   });
   geometry.computeBoundingBox();
   return geometry;
