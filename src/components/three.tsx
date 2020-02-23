@@ -67,13 +67,21 @@ const textObj = new Object3D().add(textMesh, textLine);
 textObj.position.set(-150, -90, 0);
 scene.add(textObj);
 
-const audioLoader = new AudioLoader();
-const listener = new AudioListener();
-const sound = new Audio(listener);
-const analyser = new AudioAnalyser(sound, fftSize);
+let audioLoader: AudioLoader;
+let listener: AudioListener;
+let sound: Audio;
+let analyser: AudioAnalyser;
 
 const camera = setupCamera(window.innerWidth, window.innerHeight);
-camera.add(listener);
+
+const init = async () => {
+  audioLoader = new AudioLoader();
+  listener = new AudioListener();
+  await listener.context.resume();
+  sound = new Audio(listener);
+  analyser = new AudioAnalyser(sound, fftSize);
+  camera.add(listener);
+};
 
 const godRaysEffect = new GodRaysEffect(camera, circle, {
   resolutionScale: 1,
@@ -152,9 +160,9 @@ const ThreeScene = () => {
     isMobile && controls && controls.update();
     frameId = window.requestAnimationFrame(animate);
 
-    const audioData = analyser.getFrequencyData();
+    const audioData = analyser && analyser.getFrequencyData();
 
-    if (audioData[0] >= 210) {
+    if (audioData && audioData[0] >= 210) {
       debounceSetFontForm(!isMesh);
     } else {
       debounceSetFontForm(isMesh);
@@ -178,14 +186,17 @@ const ThreeScene = () => {
   useEffect(() => {
     isClicked &&
       !isAudioLoaded &&
+      audioLoader &&
       audioLoader.load(
         `${process.env.PUBLIC_URL}/BlueBoi.mp3`,
         buffer => {
-          sound.setBuffer(buffer);
-          sound.setLoop(true);
-          setAudioLoadingStatus(true);
-          sound.setVolume(isMuted ? 0 : 0.5);
-          sound.play();
+          if (sound) {
+            sound.setBuffer(buffer);
+            sound.setLoop(true);
+            setAudioLoadingStatus(true);
+            sound.setVolume(isMuted ? 0 : 0.5);
+            sound.play();
+          }
         },
         xhr => {
           const loadingStatus = (xhr.loaded / xhr.total) * 100;
@@ -248,7 +259,13 @@ const ThreeScene = () => {
               onClick={() => setMuteStatus(!isMuted)}
             />
             {!isClicked && (
-              <button className="start-button" onClick={() => setIsClicked(true)}>
+              <button
+                className="start-button"
+                onClick={() => {
+                  init();
+                  setIsClicked(true);
+                }}
+              >
                 Start
               </button>
             )}
