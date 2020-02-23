@@ -154,7 +154,7 @@ const ThreeScene = () => {
 
     const audioData = analyser.getFrequencyData();
 
-    if (audioData[0] >= 230) {
+    if (audioData[0] >= 210) {
       debounceSetFontForm(!isMesh);
     } else {
       debounceSetFontForm(isMesh);
