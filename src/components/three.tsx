@@ -6,7 +6,8 @@ import {
   AudioListener,
   AudioLoader,
   AudioAnalyser,
-  Audio
+  Audio,
+  FogExp2
 } from "three";
 import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
 import { isMobile } from "react-device-detect";
@@ -111,11 +112,11 @@ const renderScene = () => {
   composer.render(scene, camera);
 };
 
-const starsMove = () => {
+const starsMove = (val = 0.05) => {
   const starGeo = stars.geometry as Geometry;
   starGeo.vertices.forEach((star: unknown) => {
     const eStar = star as ExtendedVector3;
-    eStar.velocity += 0.05 + Math.random() * 0.01;
+    eStar.velocity += val + Math.random() * 0.01;
     eStar.z += eStar.velocity;
     if (eStar.z > 1500) {
       eStar.z = -1500;
@@ -147,6 +148,9 @@ const ThreeScene = () => {
   if (isMobile) {
     controls = new DeviceOrientationControls(camera);
     controls.deviceOrientation = 0;
+    scene.fog = null;
+  } else {
+    scene.fog = new FogExp2(NIGHT_OWL_BLUE, 0.0005);
   }
 
   const onWindowResize = (width: number, height: number) => {
@@ -162,7 +166,7 @@ const ThreeScene = () => {
 
     const audioData = analyser && analyser.getFrequencyData();
 
-    if (audioData && audioData[0] >= 200) {
+    if (audioData && audioData[0] >= 210) {
       debounceSetFontForm(!isMesh);
     } else {
       debounceSetFontForm(isMesh);

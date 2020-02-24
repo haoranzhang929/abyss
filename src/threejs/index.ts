@@ -1,6 +1,5 @@
 import {
   Scene,
-  FogExp2,
   Color,
   PerspectiveCamera,
   DirectionalLight,
@@ -26,14 +25,13 @@ import {
 import fontJson from "../assets/hao.json";
 import star from "../assets/star.png";
 
-import { colorPalette, fogDensity } from "./config";
+import { colorPalette } from "./config";
 
-const { WHITE, LIGHT_CREAM, LIGHT_YELLOW, PANTONE_BLUE_2020, NIGHT_OWL_BLUE } = colorPalette;
+const { WHITE, LIGHT_CREAM, LIGHT_YELLOW, PANTONE_BLUE_2020 } = colorPalette;
 
 export const setupScene = (bgColor: string | number | Color | undefined) => {
   const scene = new Scene();
   scene.background = new Color(bgColor);
-  scene.fog = new FogExp2(NIGHT_OWL_BLUE, fogDensity);
   return scene;
 };
 
