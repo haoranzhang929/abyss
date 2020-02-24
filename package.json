@@ -1,9 +1,9 @@
 {
-  "name": "whoishao",
+  "name": "porject-abyss",
   "version": "0.1.0",
   "private": true,
   "author": "Haoran Zhang",
-  "homepage": "https://haoranzhang929.github.io/whoishao-ts-react/",
+  "homepage": "https://haoranzhang929.github.io/abyss/",
   "dependencies": {
     "@fortawesome/fontawesome-svg-core": "^1.2.27",
     "@fortawesome/free-solid-svg-icons": "^5.12.1",
