@@ -303,6 +303,10 @@ const ThreeScene = () => {
         </div>
       ) : null}
       <div ref={divRef} className="three-container"></div>
+      <small className="music-credit">
+        Music by LAKEY INSPIRED -{" "}
+        <a href="https://soundcloud.com/lakeyinspired/blue-boi">Blue Boi</a>
+      </small>
     </>
   );
 };
