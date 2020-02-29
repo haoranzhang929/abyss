@@ -50,7 +50,8 @@ body {
 .author,
 .hint,
 .orientation-control,
-.music-credit {
+.music-credit,
+.me {
   align-self: center;
   color: #b4b4b4;
   font-family: "Roboto Mono", monospace;
@@ -88,17 +89,27 @@ body {
   margin-right: 5px;
 }
 
-.music-credit {
+footer {
   width: 100%;
   text-align: center;
   position: fixed;
   bottom: 0;
   padding-bottom: 10px;
+  display: flex;
+  flex-direction: column;
 }
 
-.music-credit a:active,
-.music-credit a:visited,
-.music-credit a:link {
+small {
+  text-align: center;
+}
+
+.me {
+  padding-top: 2px;
+}
+
+small a:active,
+small a:visited,
+small a:link {
   color: #b4b4b4;
 }
 

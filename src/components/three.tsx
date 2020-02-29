@@ -303,10 +303,19 @@ const ThreeScene = () => {
         </div>
       ) : null}
       <div ref={divRef} className="three-container"></div>
-      <small className="music-credit">
-        Music by LAKEY INSPIRED -{" "}
-        <a href="https://soundcloud.com/lakeyinspired/blue-boi">Blue Boi</a>
-      </small>
+
+      <footer>
+        <small className="music-credit">
+          Music by LAKEY INSPIRED -{" "}
+          <a href="https://soundcloud.com/lakeyinspired/blue-boi">Blue Boi</a>
+        </small>
+        <small className="me">
+          &copy; {new Date().getFullYear()}{" "}
+          <a href="https://haoranzhang.me/" rel="noopener noreferrer" target="_blank">
+            Haoran Zhang
+          </a>
+        </small>
+      </footer>
     </>
   );
 };
