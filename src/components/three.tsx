@@ -168,10 +168,21 @@ const ThreeScene = () => {
 
     const audioData = analyser && analyser.getFrequencyData();
 
-    if (audioData && audioData[0] >= 235) {
-      debounceSetFontForm(false);
-    } else if (audioData && audioData[0] > 0 && audioData && audioData[0] <= 195) {
-      debounceSetFontForm(true);
+    if (audioData) {
+      const bassDrum = audioData[0];
+      const snareDrum = audioData[41];
+
+      if (bassDrum >= 235) {
+        // do something when bass drum hit
+      } else if (bassDrum > 0 && bassDrum <= 195) {
+        // go back to previous status after bass drum hit
+      }
+
+      if (snareDrum >= 155) {
+        debounceSetFontForm(false);
+      } else if (snareDrum > 0 && snareDrum <= 100) {
+        debounceSetFontForm(true);
+      }
     }
 
     starsMove();
