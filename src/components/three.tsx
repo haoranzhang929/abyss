@@ -200,7 +200,7 @@ const ThreeScene = () => {
             sound.setBuffer(buffer);
             sound.setLoop(true);
             setAudioLoadingStatus(true);
-            sound.setVolume(isMuted ? 0 : 0.5);
+            sound.setVolume(isMuted ? 0 : 1);
             sound.play();
           }
         },
