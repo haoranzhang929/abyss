@@ -150,7 +150,9 @@ const ThreeScene = () => {
     controls.deviceOrientation = 0;
     scene.fog = null;
   } else {
-    scene.fog = new FogExp2(NIGHT_OWL_BLUE, 0.0005);
+    if (scene.fog === null) {
+      scene.fog = new FogExp2(NIGHT_OWL_BLUE, 0.0005);
+    }
   }
 
   const onWindowResize = (width: number, height: number) => {
