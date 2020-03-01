@@ -1,10 +1,10 @@
 self.__precacheManifest = (self.__precacheManifest || []).concat([
   {
-    "revision": "6b00aee6a06e1e87ad5b061b28b5011f",
+    "revision": "aec83f3977d7224acb81c6890b193ae0",
     "url": "/abyss/index.html"
   },
   {
-    "revision": "686ff51efd1ec68fc0e0",
+    "revision": "60e9b841d018ef252f6e",
     "url": "/abyss/static/css/main.623e7ea1.chunk.css"
   },
   {
@@ -16,8 +16,8 @@ self.__precacheManifest = (self.__precacheManifest || []).concat([
     "url": "/abyss/static/js/2.56128e12.chunk.js.LICENSE.txt"
   },
   {
-    "revision": "686ff51efd1ec68fc0e0",
-    "url": "/abyss/static/js/main.cc77faf3.chunk.js"
+    "revision": "60e9b841d018ef252f6e",
+    "url": "/abyss/static/js/main.fe483d93.chunk.js"
   },
   {
     "revision": "17f42b77e2aa3aa9be11",
