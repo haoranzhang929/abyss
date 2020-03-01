@@ -135,7 +135,7 @@ const ThreeScene = () => {
   const [isMuted, setMuteStatus] = useState(false);
   const [isOrientControl, setChecked] = useState(false);
 
-  const debounceSetFontForm = useCallback(debounce(setFontForm, 30), []);
+  const debounceSetFontForm = useCallback(debounce(setFontForm, 10), []);
 
   textMesh.visible = isMesh;
   textLine.visible = !isMesh;
@@ -166,10 +166,10 @@ const ThreeScene = () => {
 
     const audioData = analyser && analyser.getFrequencyData();
 
-    if (audioData && audioData[0] >= 240) {
-      debounceSetFontForm(!isMesh);
-    } else {
-      debounceSetFontForm(isMesh);
+    if (audioData && audioData[0] >= 235) {
+      debounceSetFontForm(false);
+    } else if (audioData && audioData[0] > 0 && audioData && audioData[0] <= 195) {
+      debounceSetFontForm(true);
     }
 
     starsMove();
