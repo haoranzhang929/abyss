@@ -1,20 +1,13 @@
 {
   "files": {
-    "main.css": "/abyss/static/css/main.f9a6c9d3.chunk.css",
-    "main.js": "/abyss/static/js/main.d76a9881.chunk.js",
-    "main.js.map": "/abyss/static/js/main.d76a9881.chunk.js.map",
-    "runtime-main.js": "/abyss/static/js/runtime-main.7648328a.js",
-    "runtime-main.js.map": "/abyss/static/js/runtime-main.7648328a.js.map",
-    "static/js/2.1137ad3d.chunk.js": "/abyss/static/js/2.1137ad3d.chunk.js",
-    "static/js/2.1137ad3d.chunk.js.map": "/abyss/static/js/2.1137ad3d.chunk.js.map",
+    "main.css": "/abyss/static/css/main.9d2994d4.css",
+    "main.js": "/abyss/static/js/main.d1c4d611.js",
     "index.html": "/abyss/index.html",
-    "static/css/main.f9a6c9d3.chunk.css.map": "/abyss/static/css/main.f9a6c9d3.chunk.css.map",
-    "static/js/2.1137ad3d.chunk.js.LICENSE.txt": "/abyss/static/js/2.1137ad3d.chunk.js.LICENSE.txt"
+    "main.9d2994d4.css.map": "/abyss/static/css/main.9d2994d4.css.map",
+    "main.d1c4d611.js.map": "/abyss/static/js/main.d1c4d611.js.map"
   },
   "entrypoints": [
-    "static/js/runtime-main.7648328a.js",
-    "static/js/2.1137ad3d.chunk.js",
-    "static/css/main.f9a6c9d3.chunk.css",
-    "static/js/main.d76a9881.chunk.js"
+    "static/css/main.9d2994d4.css",
+    "static/js/main.d1c4d611.js"
   ]
 }
