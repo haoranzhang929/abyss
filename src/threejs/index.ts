@@ -4,23 +4,23 @@ import {
   PerspectiveCamera,
   DirectionalLight,
   WebGLRenderer,
-  TextBufferGeometry,
   Mesh,
   LineSegments,
   EdgesGeometry,
   LineBasicMaterial,
-  FontLoader,
   CircleGeometry,
   MeshBasicMaterial,
   MeshPhysicalMaterial,
   AmbientLight,
   HemisphereLight,
-  Geometry,
-  Vector3,
+  BufferGeometry,
   PointsMaterial,
   Points,
-  TextureLoader
+  TextureLoader,
+  Float32BufferAttribute
 } from "three";
+import { FontLoader, FontData } from "three/examples/jsm/loaders/FontLoader";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 
 import fontJson from "../assets/hao.json";
 import star from "../assets/star.png";
@@ -59,7 +59,7 @@ export const setupRenderer = (windowWidth: number, windowHeight: number) => {
   return renderer;
 };
 
-export const createFontMesh = (textGeometry: TextBufferGeometry) =>
+export const createFontMesh = (textGeometry: TextGeometry) =>
   new Mesh(
     textGeometry,
     new MeshPhysicalMaterial({
@@ -71,7 +71,7 @@ export const createFontMesh = (textGeometry: TextBufferGeometry) =>
     })
   );
 
-export const createFontLine = (textGeometry: TextBufferGeometry) =>
+export const createFontLine = (textGeometry: TextGeometry) =>
   new LineSegments(
     new EdgesGeometry(textGeometry),
     new LineBasicMaterial({
@@ -82,11 +82,11 @@ export const createFontLine = (textGeometry: TextBufferGeometry) =>
 
 export const loadText = () => {
   const textloader = new FontLoader();
-  const font = textloader.parse(fontJson);
-  const geometry = new TextBufferGeometry("皓", {
+  const font = textloader.parse(fontJson as unknown as FontData);
+  const geometry = new TextGeometry("皓", {
     font,
     size: 200,
-    height: 20,
+    depth: 20,
     curveSegments: 1
   });
   geometry.computeBoundingBox();
@@ -101,22 +101,22 @@ export const setupCircle = () => {
   return circle;
 };
 
-export interface ExtendedVector3 extends Vector3 {
-  velocity: number;
-}
-
 export const setupStars = (starCount = 1000) => {
   const starTexture = new TextureLoader().load(star);
-  const starGeo = new Geometry();
+  const positions: number[] = [];
+  const velocities: number[] = [];
   for (let i = 0; i < starCount; i++) {
-    const star = new Vector3(
+    positions.push(
       Math.random() * 3000 - 1500,
       Math.random() * 3000 - 1500,
       Math.random() * 3000 - 1500
     );
-    const extendedStar = { ...star, velocity: 0 } as unknown;
-    starGeo.vertices.push(extendedStar as Vector3);
+    velocities.push(0);
   }
+  const starGeo = new BufferGeometry();
+  starGeo.setAttribute("position", new Float32BufferAttribute(positions, 3));
+  // store velocities on userData for animation
+  (starGeo as BufferGeometry).userData = { velocities };
   const starMaterial = new PointsMaterial({
     color: LIGHT_CREAM,
     size: 5,

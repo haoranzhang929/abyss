@@ -1,22 +1,29 @@
 import React, { useRef, useEffect, useState, useCallback, memo } from "react";
 import {
   Object3D,
-  Geometry,
-  WebGLRenderer,
+  BufferGeometry,
   AudioListener,
   AudioLoader,
   AudioAnalyser,
   Audio,
-  FogExp2
+  FogExp2,
+  BufferAttribute
 } from "three";
-import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
+import {
+  GodRaysEffect,
+  RenderPass,
+  EffectPass,
+  EffectComposer,
+  SMAAEffect,
+  SMAAPreset
+} from "postprocessing";
 import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeUp, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 import debounce from "lodash.debounce";
 
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { DeviceOrientationControls } from "three/examples/jsm/controls/DeviceOrientationControls.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { DeviceOrientationControls } from "three-stdlib";
 
 import useWindowSize from "../hooks/useWindowSize";
 
@@ -31,8 +38,7 @@ import {
   loadText,
   createFontMesh,
   createFontLine,
-  setupStars,
-  ExtendedVector3
+  setupStars
 } from "../threejs";
 
 import { colorPalette, fftSize } from "../threejs/config";
@@ -50,11 +56,7 @@ scene.add(...lights);
 const circle = setupCircle();
 scene.add(circle);
 
-const areaImage = new Image();
-areaImage.src = SMAAEffect.areaImageDataURL;
-const searchImage = new Image();
-searchImage.src = SMAAEffect.searchImageDataURL;
-const smaaEffect = new SMAAEffect(searchImage, areaImage, 1);
+const smaaEffect = new SMAAEffect({ preset: SMAAPreset.MEDIUM });
 
 const stars = setupStars();
 scene.add(stars);
@@ -95,11 +97,10 @@ const godRaysEffect = new GodRaysEffect(camera, circle, {
 const renderPass = new RenderPass(scene, camera);
 const effectPass = new EffectPass(camera, smaaEffect, godRaysEffect);
 effectPass.renderToScreen = true;
-const composer = new EffectComposer(setupRenderer(window.innerWidth, window.innerHeight));
+const renderer = setupRenderer(window.innerWidth, window.innerHeight);
+const composer = new EffectComposer(renderer);
 composer.addPass(renderPass);
 composer.addPass(effectPass);
-
-const renderer = composer.renderer as WebGLRenderer;
 
 const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.enablePan = false;
@@ -109,21 +110,25 @@ orbitControls.rotateSpeed = 0.4;
 orbitControls.zoomSpeed = 0.6;
 
 const renderScene = () => {
-  composer.render(scene, camera);
+  composer.render();
 };
 
 const starsMove = (val = 0.05) => {
-  const starGeo = stars.geometry as Geometry;
-  starGeo.vertices.forEach((star: unknown) => {
-    const eStar = star as ExtendedVector3;
-    eStar.velocity += val + Math.random() * 0.01;
-    eStar.z += eStar.velocity;
-    if (eStar.z > 1500) {
-      eStar.z = -1500;
-      eStar.velocity = 0;
+  const starGeo = stars.geometry as BufferGeometry & {
+    userData: { velocities: number[] };
+  };
+  const positions = starGeo.getAttribute("position") as BufferAttribute;
+  const velocities = starGeo.userData.velocities as number[];
+  for (let i = 0; i < positions.count; i++) {
+    velocities[i] += val + Math.random() * 0.01;
+    let z = positions.getZ(i) + velocities[i];
+    if (z > 1500) {
+      z = -1500;
+      velocities[i] = 0;
     }
-  });
-  starGeo.verticesNeedUpdate = true;
+    positions.setZ(i, z);
+  }
+  positions.needsUpdate = true;
   stars.rotation.z -= 0.0005;
 };
 // Three Scene init setup end
@@ -147,7 +152,7 @@ const ThreeScene = () => {
 
   if (isMobile) {
     controls = new DeviceOrientationControls(camera);
-    controls.deviceOrientation = 0;
+    controls.deviceOrientation = {} as Partial<DeviceOrientationEvent>;
     scene.fog = null;
   } else {
     if (scene.fog === null) {
@@ -206,7 +211,7 @@ const ThreeScene = () => {
       audioLoader &&
       audioLoader.load(
         `${process.env.PUBLIC_URL}/BlueBoi.mp3`,
-        buffer => {
+        (buffer: AudioBuffer) => {
           if (sound) {
             sound.setBuffer(buffer);
             sound.setLoop(true);
@@ -215,7 +220,7 @@ const ThreeScene = () => {
             sound.play();
           }
         },
-        xhr => {
+        (xhr: ProgressEvent<EventTarget>) => {
           const loadingStatus = (xhr.loaded / xhr.total) * 100;
           console.info(`Audio Loading: ${Math.floor(loadingStatus)}%`);
           if (loadingStatus === 100) {
