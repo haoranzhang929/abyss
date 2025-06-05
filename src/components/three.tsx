@@ -23,7 +23,7 @@ import { faVolumeUp, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 import debounce from "lodash.debounce";
 
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
-import { DeviceOrientationControls } from "three/examples/jsm/controls/DeviceOrientationControls";
+import { DeviceOrientationControls } from "three-stdlib";
 
 import useWindowSize from "../hooks/useWindowSize";
 
@@ -152,7 +152,7 @@ const ThreeScene = () => {
 
   if (isMobile) {
     controls = new DeviceOrientationControls(camera);
-    controls.deviceOrientation = null;
+    controls.deviceOrientation = {} as Partial<DeviceOrientationEvent>;
     scene.fog = null;
   } else {
     if (scene.fog === null) {
