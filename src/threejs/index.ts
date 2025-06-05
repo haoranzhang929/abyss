@@ -82,7 +82,7 @@ export const createFontLine = (textGeometry: TextGeometry) =>
 
 export const loadText = () => {
   const textloader = new FontLoader();
-  const font = textloader.parse((fontJson as unknown) as FontData);
+  const font = textloader.parse(fontJson as unknown as FontData);
   const geometry = new TextGeometry("皓", {
     font,
     size: 200,

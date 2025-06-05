@@ -10,7 +10,14 @@ import {
   FogExp2,
   BufferAttribute
 } from "three";
-import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
+import {
+  GodRaysEffect,
+  RenderPass,
+  EffectPass,
+  EffectComposer,
+  SMAAEffect,
+  SMAAPreset
+} from "postprocessing";
 import { isMobile } from "react-device-detect";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeUp, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
@@ -50,11 +57,7 @@ scene.add(...lights);
 const circle = setupCircle();
 scene.add(circle);
 
-const areaImage = new Image();
-areaImage.src = SMAAEffect.areaImageDataURL;
-const searchImage = new Image();
-searchImage.src = SMAAEffect.searchImageDataURL;
-const smaaEffect = new SMAAEffect(searchImage, areaImage, 1);
+const smaaEffect = new SMAAEffect({ preset: SMAAPreset.MEDIUM });
 
 const stars = setupStars();
 scene.add(stars);
@@ -95,11 +98,10 @@ const godRaysEffect = new GodRaysEffect(camera, circle, {
 const renderPass = new RenderPass(scene, camera);
 const effectPass = new EffectPass(camera, smaaEffect, godRaysEffect);
 effectPass.renderToScreen = true;
-const composer = new EffectComposer(setupRenderer(window.innerWidth, window.innerHeight));
+const renderer = setupRenderer(window.innerWidth, window.innerHeight);
+const composer = new EffectComposer(renderer);
 composer.addPass(renderPass);
 composer.addPass(effectPass);
-
-const renderer = composer.renderer as WebGLRenderer;
 
 const orbitControls = new OrbitControls(camera, renderer.domElement);
 orbitControls.enablePan = false;
@@ -109,7 +111,7 @@ orbitControls.rotateSpeed = 0.4;
 orbitControls.zoomSpeed = 0.6;
 
 const renderScene = () => {
-  composer.render(scene, camera);
+  composer.render();
 };
 
 const starsMove = (val = 0.05) => {
