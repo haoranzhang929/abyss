@@ -1,8 +1,28 @@
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Abyss
+
+This is a small personal project showcasing some of my [three.js](https://threejs.org/) experiments. It renders an animated star field and a few post–processing effects with React acting as the UI framework.
+
+The project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app) but most of the rendering logic lives in plain three.js.
+
+### Getting started
+
+Clone the repository and install the dependencies:
+
+```bash
+npm install
+```
+
+Then run the development server with:
+
+```bash
+npm start
+```
+
+The scene will be available at [http://localhost:3000](http://localhost:3000).
 
 ## Available Scripts
 
-In the project directory, you can run:
+In the project directory you can run:
 
 ### `npm start`
 
@@ -38,6 +58,12 @@ The build is minified and the filenames include the hashes.<br />
 Your app is ready to be deployed!
 
 See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+
+## Features
+
+- Animated star field driven by an audio analyser
+- Post–processing stack using `postprocessing` for god rays and SMAA anti–aliasing
+- Optional device orientation controls for mobile users
 
 ## Learn More
 
