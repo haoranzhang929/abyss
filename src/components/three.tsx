@@ -2,7 +2,6 @@ import React, { useRef, useEffect, useState, useCallback, memo } from "react";
 import {
   Object3D,
   BufferGeometry,
-  WebGLRenderer,
   AudioListener,
   AudioLoader,
   AudioAnalyser,
@@ -23,8 +22,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faVolumeUp, faVolumeMute } from "@fortawesome/free-solid-svg-icons";
 import debounce from "lodash.debounce";
 
-import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { DeviceOrientationControls } from "three/examples/jsm/controls/DeviceOrientationControls.js";
+import { OrbitControls } from "three/examples/jsm/controls/OrbitControls";
+import { DeviceOrientationControls } from "three/examples/jsm/controls/DeviceOrientationControls";
 
 import useWindowSize from "../hooks/useWindowSize";
 

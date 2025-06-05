@@ -1,4 +1,4 @@
-declare module "three/examples/jsm/controls/DeviceOrientationControls.js" {
+declare module "three/examples/jsm/controls/DeviceOrientationControls" {
   import { Camera, EventDispatcher } from "three";
   export class DeviceOrientationControls extends EventDispatcher {
     constructor(object: Camera, domElement?: HTMLElement);

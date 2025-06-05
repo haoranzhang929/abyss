@@ -19,8 +19,8 @@ import {
   TextureLoader,
   Float32BufferAttribute
 } from "three";
-import { FontLoader, FontData } from "three/examples/jsm/loaders/FontLoader.js";
-import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry.js";
+import { FontLoader, FontData } from "three/examples/jsm/loaders/FontLoader";
+import { TextGeometry } from "three/examples/jsm/geometries/TextGeometry";
 
 import fontJson from "../assets/hao.json";
 import star from "../assets/star.png";
