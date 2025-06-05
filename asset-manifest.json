@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/abyss/static/css/main.9d2994d4.css",
-    "main.js": "/abyss/static/js/main.d1c4d611.js",
+    "main.js": "/abyss/static/js/main.d60f814c.js",
     "index.html": "/abyss/index.html",
     "main.9d2994d4.css.map": "/abyss/static/css/main.9d2994d4.css.map",
-    "main.d1c4d611.js.map": "/abyss/static/js/main.d1c4d611.js.map"
+    "main.d60f814c.js.map": "/abyss/static/js/main.d60f814c.js.map"
   },
   "entrypoints": [
     "static/css/main.9d2994d4.css",
-    "static/js/main.d1c4d611.js"
+    "static/js/main.d60f814c.js"
   ]
 }
