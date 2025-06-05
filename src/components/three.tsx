@@ -1,13 +1,14 @@
 import React, { useRef, useEffect, useState, useCallback, memo } from "react";
 import {
   Object3D,
-  Geometry,
+  BufferGeometry,
   WebGLRenderer,
   AudioListener,
   AudioLoader,
   AudioAnalyser,
   Audio,
-  FogExp2
+  FogExp2,
+  BufferAttribute
 } from "three";
 import { GodRaysEffect, RenderPass, EffectPass, EffectComposer, SMAAEffect } from "postprocessing";
 import { isMobile } from "react-device-detect";
@@ -31,8 +32,7 @@ import {
   loadText,
   createFontMesh,
   createFontLine,
-  setupStars,
-  ExtendedVector3
+  setupStars
 } from "../threejs";
 
 import { colorPalette, fftSize } from "../threejs/config";
@@ -113,17 +113,21 @@ const renderScene = () => {
 };
 
 const starsMove = (val = 0.05) => {
-  const starGeo = stars.geometry as Geometry;
-  starGeo.vertices.forEach((star: unknown) => {
-    const eStar = star as ExtendedVector3;
-    eStar.velocity += val + Math.random() * 0.01;
-    eStar.z += eStar.velocity;
-    if (eStar.z > 1500) {
-      eStar.z = -1500;
-      eStar.velocity = 0;
+  const starGeo = stars.geometry as BufferGeometry & {
+    userData: { velocities: number[] };
+  };
+  const positions = starGeo.getAttribute("position") as BufferAttribute;
+  const velocities = starGeo.userData.velocities as number[];
+  for (let i = 0; i < positions.count; i++) {
+    velocities[i] += val + Math.random() * 0.01;
+    let z = positions.getZ(i) + velocities[i];
+    if (z > 1500) {
+      z = -1500;
+      velocities[i] = 0;
     }
-  });
-  starGeo.verticesNeedUpdate = true;
+    positions.setZ(i, z);
+  }
+  positions.needsUpdate = true;
   stars.rotation.z -= 0.0005;
 };
 // Three Scene init setup end
@@ -147,7 +151,7 @@ const ThreeScene = () => {
 
   if (isMobile) {
     controls = new DeviceOrientationControls(camera);
-    controls.deviceOrientation = 0;
+    controls.deviceOrientation = null;
     scene.fog = null;
   } else {
     if (scene.fog === null) {
@@ -206,7 +210,7 @@ const ThreeScene = () => {
       audioLoader &&
       audioLoader.load(
         `${process.env.PUBLIC_URL}/BlueBoi.mp3`,
-        buffer => {
+        (buffer: AudioBuffer) => {
           if (sound) {
             sound.setBuffer(buffer);
             sound.setLoop(true);
@@ -215,7 +219,7 @@ const ThreeScene = () => {
             sound.play();
           }
         },
-        xhr => {
+        (xhr: ProgressEvent<EventTarget>) => {
           const loadingStatus = (xhr.loaded / xhr.total) * 100;
           console.info(`Audio Loading: ${Math.floor(loadingStatus)}%`);
           if (loadingStatus === 100) {
