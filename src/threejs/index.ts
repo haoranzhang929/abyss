@@ -125,3 +125,5 @@ export const setupStars = (starCount = 1000) => {
   });
   return new Points(starGeo, starMaterial);
 };
+
+export { DitheringEffect } from "./DitheringEffect";

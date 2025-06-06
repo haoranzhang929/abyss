@@ -38,7 +38,8 @@ import {
   loadText,
   createFontMesh,
   createFontLine,
-  setupStars
+  setupStars,
+  DitheringEffect
 } from "../threejs";
 
 import { colorPalette, fftSize } from "../threejs/config";
@@ -57,6 +58,7 @@ const circle = setupCircle();
 scene.add(circle);
 
 const smaaEffect = new SMAAEffect({ preset: SMAAPreset.MEDIUM });
+const ditheringEffect = new DitheringEffect();
 
 const stars = setupStars();
 scene.add(stars);
@@ -95,7 +97,7 @@ const godRaysEffect = new GodRaysEffect(camera, circle, {
 });
 
 const renderPass = new RenderPass(scene, camera);
-const effectPass = new EffectPass(camera, smaaEffect, godRaysEffect);
+const effectPass = new EffectPass(camera, smaaEffect, godRaysEffect, ditheringEffect);
 effectPass.renderToScreen = true;
 const renderer = setupRenderer(window.innerWidth, window.innerHeight);
 const composer = new EffectComposer(renderer);
