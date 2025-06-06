@@ -38,7 +38,8 @@ import {
   loadText,
   createFontMesh,
   createFontLine,
-  setupStars
+  setupStars,
+  DitheringEffect
 } from "../threejs";
 
 import { colorPalette, fftSize } from "../threejs/config";
@@ -57,6 +58,7 @@ const circle = setupCircle();
 scene.add(circle);
 
 const smaaEffect = new SMAAEffect({ preset: SMAAPreset.MEDIUM });
+const ditheringEffect = new DitheringEffect();
 
 const stars = setupStars();
 scene.add(stars);
@@ -139,6 +141,7 @@ const ThreeScene = () => {
   const [isAudioLoaded, setAudioLoadingStatus] = useState(false);
   const [isMuted, setMuteStatus] = useState(false);
   const [isOrientControl, setChecked] = useState(false);
+  const [isDithering, setDithering] = useState(false);
 
   const debounceSetFontForm = useCallback(debounce(setFontForm, 10), []);
 
@@ -265,6 +268,24 @@ const ThreeScene = () => {
     [isMobile, isOrientControl]
   );
 
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if (event.key.toLowerCase() === "d") {
+        setDithering((v) => !v);
+      }
+    };
+    window.addEventListener("keydown", handler);
+    return () => window.removeEventListener("keydown", handler);
+  }, []);
+
+  useEffect(() => {
+    if (isDithering) {
+      effectPass.addEffect(ditheringEffect);
+    } else {
+      effectPass.removeEffect(ditheringEffect);
+    }
+  }, [isDithering]);
+
   return (
     <>
       {!isAudioLoaded ? (
@@ -315,7 +336,7 @@ const ThreeScene = () => {
                   ? "Move your device around (or Touch/Pinch) "
                   : "Touch/Pinch your screen "
                 : "Darg/Zoom your mouse "}
-              to explore
+              to explore. Press "D" to toggle dithering.
             </small>
           </div>
         </div>

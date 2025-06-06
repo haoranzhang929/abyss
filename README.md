@@ -63,6 +63,7 @@ See the section about [deployment](https://facebook.github.io/create-react-app/d
 
 - Animated star field driven by an audio analyser
 - Post–processing stack using `postprocessing` for god rays and SMAA anti–aliasing
+- Dithering shader based on Codrops tutorial (press "D" to toggle)
 - Optional device orientation controls for mobile users
 
 ## Learn More
