@@ -1,4 +1,4 @@
-import { Effect, EffectAttribute, BlendFunction } from "postprocessing";
+import { Effect, BlendFunction } from "postprocessing";
 import { Uniform } from "three";
 
 const fragmentShader = `
@@ -32,7 +32,6 @@ export class DitheringEffect extends Effect {
   constructor({ blendFunction = BlendFunction.NORMAL, amount = 4 }: DitheringEffectOptions = {}) {
     super("DitheringEffect", fragmentShader, {
       blendFunction,
-      attributes: EffectAttribute.CONVOLUTION,
       uniforms: new Map([["amount", new Uniform(amount)]])
     });
   }
